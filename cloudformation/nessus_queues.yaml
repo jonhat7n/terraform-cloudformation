@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  ECSAMI:
+    Description: AMI ID
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: /aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id
+  InstanceType:
+    Type: String
+    Description: Instance type, eg t3.micro
+    Default: t3.micro
+Resources:
+  NessusLaunchConfig:
+    Type: 'AWS::AutoScaling::LaunchConfiguration'
+    Properties:
+      AssociatePublicIpAddress: true
+      ImageId: !Ref ECSAMI
+      InstanceType: !Ref InstanceType 
+      LaunchConfigurationName: NessusQueueT3
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9c00447f-78e1-40f4-a3fb-aa18188f1443
+  NessusWorkerASG:
+    Type: 'AWS::AutoScaling::AutoScalingGroup'
+    Properties:
+      AutoScalingGroupName: NessusWorkerASG
+      LaunchConfigurationName: !Ref NessusLaunchConfig
+      MinSize: '1'
+      MaxSize: '1'
+      DesiredCapacity: '1'
+      HealthCheckGracePeriod: 300
+      VPCZoneIdentifier:
+        - subnet-97ca8ae0
+        - subnet-b06106e9
+        - subnet-059dbeed115733f4f
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0bd3672d-adde-4e0f-87a4-33d694e345c9
+Metadata:
+  'AWS::CloudFormation::Designer':
+    0bd3672d-adde-4e0f-87a4-33d694e345c9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 240
+        'y': 120
+      z: 1
+      embeds: []
+      isassociatedwith:
+        - 9c00447f-78e1-40f4-a3fb-aa18188f1443
+    9c00447f-78e1-40f4-a3fb-aa18188f1443:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 81.24566580083697
+        'y': 120.03919626737365
+      z: 0
+      embeds: []
