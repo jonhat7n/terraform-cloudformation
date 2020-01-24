@@ -19,8 +19,13 @@ variable "public-subnet-1d-prod" {
 }
 
 variable "nessus_micro" {
+    default = "t3.micro"
+    description = "T3 Mirco Instance Type"
+}
+
+variable "nessus_small" {
     default = "t3.small"
-    description = ""
+    description = "T3 Small Instance Type"
 }
 
 # variable "aws_access_key" {
